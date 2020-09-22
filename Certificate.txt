@@ -1,0 +1,15 @@
+--for creating pfx file with password
+PS C:\Users\hi> dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\DockerApi.pfx -p p654321
+--for trusting that pfx
+PS C:\Users\hi> dotnet dev-certs https --trust
+
+--create a unique id for saving scret password paste following line in csproj file
+<PropertyGroup>
+    <UserSecretsId>a9f8e418-33d3-41d4-9fb1-ba07f96c5a22</UserSecretsId>
+</PropertyGroup>
+--this is any unique id
+--to save password in user profile
+PS D:\Work\DockerApi> dotnet user-secrets set "Kestral:Certificates:Development:Password" "p654321"
+
+--for docker run with pfx
+PS D:\Work\DockerApi> docker run -p 8080:80 -p 8081:443 -e ASPNETCORE_URLS="https://+;http://+" ASPNETCORE_HTTPS_PORT=8081 -e ASPNETCORE_ENVIRONMENT=DEVELOPMENT -v $env:APPDATA\microsoft\UserSecrets\:/root/.microsoft/usersecrets -v $env:USERPROFILE\.aspnet\https:/root/.aspnet/https/ dockerapi
